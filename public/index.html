@@ -3,6 +3,8 @@
 
 <head>
   <title></title>
+  <link rel="stylesheet" href="styles/normalize.css" />
+  <link rel="stylesheet" href="styles/foundation.min.css" />
   <link rel="stylesheet" href="styles/kendo.common.min.css" />
   <link rel="stylesheet" href="styles/kendo.default.min.css" />
   <link rel="stylesheet" href="styles/kendo.dataviz.min.css" />
@@ -11,60 +13,61 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/angular.min.js"></script>
   <script src="js/kendo.all.min.js"></script>
+  <script src="js/foundation.min.js"></script>
+  <script src="js/foundation.tab.js"></script>
 </head>
 
 <body>
-  <div id="example" ng-app="KendoDemos">
+  <div id="example" ng-app="KendoDemos" class="row">
     <div ng-controller="MyCtrl">
 
       <h1>Stoker Dashboard (v
         <span ng-bind="stoker.version"></span>)</h1>
 
-      <h2>Sensors</h2>
-      <div id="gauge-container">
-      <div ng-repeat="sensor in stoker.sensors">
-        <span ng-bind="sensor.name"></span> (
-        <span ng-bind="sensor.id"></span>) is at
-        <span ng-bind="sensor.tc"></span>
-        <span kendo-radialgauge k-scale="scale" ng-model="sensor.tc">
-        </span>
-      </div>
-      </div>
+      <ul class="tabs" data-tab>
+        <li class="tab-title"><a href="#panel1">Graph</a></li>
+        <li class="tab-title active"><a href="#panel2">Guages</a></li>
+      </ul>
+      <div class="tabs-content">
+        <div class="content" id="panel1">
+          <h2>Graph</h2>
+          <div id="chart" kendo-chart k-legend="{ position: 'bottom' }" k-series-defaults="{ type: 'line' }"
+            k-series="chart.series" k-data-source="chart.dataSource"></div>
+        </div>
+        <div class="content active" id="panel2">
+          <h2>Sensors</h2>
+          <div id="gauge-container" class="row">
+            <div ng-repeat="sensor in stoker.sensors" class="small-4 columns">
+              <div class="row">
+                <h3 ng-bind="sensor.name" class="small-12 columns text-center"></h3>
+                <div class="small-12 columns">
+                  <div kendo-radialgauge k-scale="scale" ng-model="sensor.current">
+                  </div>
+                </div>
+                <h3 ng-bind="sensor.current" class="small-12 columns text-center"></h3>
+                <h4 ng-bind="sensor.target" class="small-12 columns text-center"></h4>
+              </div>
+            </div>
+          </div>
 
-      <h2>Blowers</h2>
-      <div ng-repeat="blower in stoker.blowers">
-        <div ng-bind="blower.id"></div>
+          <h2>Blowers</h2>
+          <div ng-repeat="blower in stoker.blowers">
+            <div ng-bind="blower.id"></div>
+            <div class="switch round large">
+              <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
+              <label for="blower"></label>
+            </div>
+          </div>
+        </div>
       </div>
 
 
     </div>
+    <script src="js/stoker.js"></script>
     <script>
-      angular.module("KendoDemos", ["kendo.directives"])
-        .controller("MyCtrl", function($scope, $http) {
-          $http.jsonp("http://192.168.0.200/stoker.json?version=true&callback=JSON_CALLBACK")
-            .success(function(data) {
-              console.log(data);
-              $scope.stoker = data.stoker;
-            });
-          $scope.scale = {
-            min: 0,
-            max: 500,
-            ranges: [{
-              from: 150,
-              to: 200,
-              color: "#ffc700"
-            }, {
-              from: 200,
-              to: 300,
-              color: "#ff7a00"
-            }, {
-              from: 300,
-              to: 350,
-              color: "#c20000"
-            }]
-          };
-        });
+      $(document).foundation();
     </script>
+
   </div>
 </body>
 
