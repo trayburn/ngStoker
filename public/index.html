@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <link rel="stylesheet" href="styles/kendo.common.min.css" />
+  <link rel="stylesheet" href="styles/kendo.default.min.css" />
+  <link rel="stylesheet" href="styles/kendo.dataviz.min.css" />
+  <link rel="stylesheet" href="styles/kendo.dataviz.default.min.css" />
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/kendo.all.min.js"></script>
+</head>
+
+<body>
+  <div id="example" ng-app="KendoDemos">
+    <div ng-controller="MyCtrl">
+
+      <h1>Stoker Dashboard (v
+        <span ng-bind="stoker.version"></span>)</h1>
+
+      <h2>Sensors</h2>
+      <div id="gauge-container">
+      <div ng-repeat="sensor in stoker.sensors">
+        <span ng-bind="sensor.name"></span> (
+        <span ng-bind="sensor.id"></span>) is at
+        <span ng-bind="sensor.tc"></span>
+        <span kendo-radialgauge k-scale="scale" ng-model="sensor.tc">
+        </span>
+      </div>
+      </div>
+
+      <h2>Blowers</h2>
+      <div ng-repeat="blower in stoker.blowers">
+        <div ng-bind="blower.id"></div>
+      </div>
+
+
+    </div>
+    <script>
+      angular.module("KendoDemos", ["kendo.directives"])
+        .controller("MyCtrl", function($scope, $http) {
+          $http.jsonp("http://192.168.0.200/stoker.json?version=true&callback=JSON_CALLBACK")
+            .success(function(data) {
+              console.log(data);
+              $scope.stoker = data.stoker;
+            });
+          $scope.scale = {
+            min: 0,
+            max: 500,
+            ranges: [{
+              from: 150,
+              to: 200,
+              color: "#ffc700"
+            }, {
+              from: 200,
+              to: 300,
+              color: "#ff7a00"
+            }, {
+              from: 300,
+              to: 350,
+              color: "#c20000"
+            }]
+          };
+        });
+    </script>
+  </div>
+</body>
+
+</html>
