@@ -1,17 +1,22 @@
-angular.module("KendoDemos", ["kendo.directives"])
+angular.module("StokerAngularApp", ["ngRadialGauge"])
   .controller("MyCtrl", function ($scope, $http, $interval) {
+    var defaultScale = {
+      min: 0,
+      max: 300,
+      unit: "°",
+      precision: 2,
+      ranges: [
+        { min: 0, max: 0, color: "#0000FF" },
+        { min: 0, max: 500, color: "#00FF00" },
+        { min: 500, max: 500, color: "#FF0000" }
+      ]
+    };
 
     $scope.stoker = {
       version: "0.0.0.0",
       sensors: {},
       blowers: {}
     };
-
-    $scope.chart = {
-      data: [],
-      series: []
-    };
-    $scope.chart.dataSource = new kendo.data.DataSource({ data: $scope.chart.data });
 
     function updateFromStoker() {
       $http.jsonp("http://192.168.0.200/stoker.json?version=true&callback=JSON_CALLBACK")
@@ -20,10 +25,13 @@ angular.module("KendoDemos", ["kendo.directives"])
           var chartDataPoint = { };
           data.stoker.sensors.forEach(function (sensor) {
             if (typeof $scope.stoker.sensors[sensor.id] == 'undefined') {
-              // There is a new sensor...
-              $scope.stoker.sensors[sensor.id] = {};
-              $scope.chart.series.push({ field: sensor.id, name: sensor.name });
+              // There is a new Sensor...
+              var newScale = {};
+              angular.extend(newScale, defaultScale);
+              $scope.stoker.sensors[sensor.id] = { scale: newScale };
             }
+
+            // Update Sensor information
             var s = $scope.stoker.sensors[sensor.id];
             s.id = sensor.id;
             s.name = sensor.name;
@@ -34,15 +42,49 @@ angular.module("KendoDemos", ["kendo.directives"])
             s.low = sensor.tl;
             s.blower = sensor.blower;
 
-            chartDataPoint[sensor.id] = sensor.tc;
-          });
+            s.meterPercent = Math.ceil((s.current / defaultScale.max) * 100);
+            s.meterStyle = {
+              width: s.meterPercent + "%"
+            };
 
-          $scope.chart.dataSource.add(chartDataPoint);
+            if (s.current < s.low) { s.meterClass = "secondary"; }
+            if (s.current > s.high) { s.meterClass = "alert"; }
+            if (s.current >= s.low && s.current <= s.high) { s.meterClass = "success"; }
+
+            function hasRangesChanged() {
+              if (s.blower === null) { return s.scale.ranges[0].max != (s.target - 10); }
+              return s.low != s.scale.ranges[0].max || s.high != s.scale.ranges[1].max;
+            }
+
+            function updateRanges() {
+              if (s.blower === null) {
+                return [
+                  { min: defaultScale.min, max: s.target - 10, color: "#0000FF" },
+                  { min: s.target - 10, max: s.target + 10, color: "#00FF00" },
+                  { min: s.target + 10, max: defaultScale.max, color: "#FF0000" }
+                ];
+              }
+              return [
+                { min: defaultScale.min, max: s.low, color: "#0000FF" },
+                { min: s.low, max: s.high, color: "#00FF00" },
+                { min: s.high, max: defaultScale.max, color: "#FF0000" }
+              ];
+            }
+
+            // Update scale
+            if (hasRangesChanged()) {
+              s.scale.ranges = updateRanges();
+            }
+
+          });
 
           data.stoker.blowers.forEach(function (blower) {
             if (typeof $scope.stoker.blowers[blower.id] == 'undefined') {
+              // There is a new blower...
               $scope.stoker.blowers[blower.id] = {};
             }
+
+            // Update Blower information
             var b = $scope.stoker.blowers[blower.id];
             b.id = blower.id;
             b.name = blower.name;
@@ -52,23 +94,5 @@ angular.module("KendoDemos", ["kendo.directives"])
     }
 
 
-    $interval(updateFromStoker, 250);
-
-    $scope.scale = {
-      min: 0,
-      max: 500,
-      ranges: [{
-        from: 150,
-        to: 200,
-        color: "#ffc700"
-      }, {
-        from: 200,
-        to: 300,
-        color: "#ff7a00"
-      }, {
-        from: 300,
-        to: 350,
-        color: "#c20000"
-      }]
-    };
+    $interval(updateFromStoker, 1000);
   });

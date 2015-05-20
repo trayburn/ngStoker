@@ -3,22 +3,13 @@
 
 <head>
   <title></title>
-  <link rel="stylesheet" href="styles/normalize.css" />
-  <link rel="stylesheet" href="styles/foundation.min.css" />
-  <link rel="stylesheet" href="styles/kendo.common.min.css" />
-  <link rel="stylesheet" href="styles/kendo.default.min.css" />
-  <link rel="stylesheet" href="styles/kendo.dataviz.min.css" />
-  <link rel="stylesheet" href="styles/kendo.dataviz.default.min.css" />
-
-  <script src="js/jquery.min.js"></script>
-  <script src="js/angular.min.js"></script>
-  <script src="js/kendo.all.min.js"></script>
-  <script src="js/foundation.min.js"></script>
-  <script src="js/foundation.tab.js"></script>
+  <link rel="stylesheet" href="vendor/foundation/css/foundation.min.css" />
+  <link rel="stylesheet" href="styles/stoker.css" />
+  <script src="vendor/modernizr/modernizr.js"></script>
 </head>
 
 <body>
-  <div id="example" ng-app="KendoDemos" class="row">
+  <div id="example" ng-app="StokerAngularApp" class="row">
     <div ng-controller="MyCtrl">
 
       <h1>Stoker Dashboard (v
@@ -27,12 +18,11 @@
       <ul class="tabs" data-tab>
         <li class="tab-title"><a href="#panel1">Graph</a></li>
         <li class="tab-title active"><a href="#panel2">Guages</a></li>
+        <li class="tab-title"><a href="#panel3">Settings</a></li>
       </ul>
       <div class="tabs-content">
         <div class="content" id="panel1">
           <h2>Graph</h2>
-          <div id="chart" kendo-chart k-legend="{ position: 'bottom' }" k-series-defaults="{ type: 'line' }"
-            k-series="chart.series" k-data-source="chart.dataSource"></div>
         </div>
         <div class="content active" id="panel2">
           <h2>Sensors</h2>
@@ -40,12 +30,15 @@
             <div ng-repeat="sensor in stoker.sensors" class="small-4 columns">
               <div class="row">
                 <h3 ng-bind="sensor.name" class="small-12 columns text-center"></h3>
-                <div class="small-12 columns">
-                  <div kendo-radialgauge k-scale="scale" ng-model="sensor.current">
-                  </div>
+
+                <div
+                  width="250" ng-radial-gauge value="sensor.current"
+                  ranges = "sensor.scale.ranges"
+                  value-unit="sensor.scale.unit" precision="sensor.scale.precision"
+                  lower-limit="sensor.scale.min" upper-limit="sensor.scale.max"></div>
+                <div class="progress round small-12 columns text-center" ng-class="sensor.meterClass">
+                  <span class="meter" ng-style="sensor.meterStyle"></span>
                 </div>
-                <h3 ng-bind="sensor.current" class="small-12 columns text-center"></h3>
-                <h4 ng-bind="sensor.target" class="small-12 columns text-center"></h4>
               </div>
             </div>
           </div>
@@ -53,16 +46,30 @@
           <h2>Blowers</h2>
           <div ng-repeat="blower in stoker.blowers">
             <div ng-bind="blower.id"></div>
+            <div ng-bind="blower.name"></div>
             <div class="switch round large">
               <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
               <label for="blower"></label>
             </div>
           </div>
         </div>
+        <div class="content" id="panel3">
+          <h1>Hello World</h1>
+        </div>
       </div>
 
 
     </div>
+
+
+    <script src="vendor/d3/d3.min.js"></script>
+    <script src="vendor/jquery/dist/jquery.min.js"></script>
+    <script src="vendor/fastclick/lib/fastclick.js"></script>
+    <script src="vendor/foundation/js/foundation.min.js"></script>
+    <!--<script src="vendor/foundation/js/foundation/foundation.tab.js"></script>-->
+    <script src="vendor/angular/angular.min.js"></script>
+    <script src="vendor/ngRadialGauge/src/ng-radial-gauge-dir.js"></script>
+
     <script src="js/stoker.js"></script>
     <script>
       $(document).foundation();
