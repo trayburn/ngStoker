@@ -4,7 +4,8 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       minTemp: 0,
       maxTemp: 300,
       interval: 2000,
-      blowerAlertPercentage: 80
+      blowerAlertPercentage: 80,
+      stokerIp: "rayburn.myds.me"
     }
 
     var defaultScale = {
@@ -26,7 +27,7 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
     };
 
     function updateFromStoker() {
-      $http.jsonp("http://192.168.0.200/stoker.json?version=true&callback=JSON_CALLBACK")
+      $http.jsonp("http://" + config.stokerIp + "/stoker.json?version=true&callback=JSON_CALLBACK")
         .success(function (data) {
           $scope.stoker.version = data.stoker.version;
           var chartDataPoint = { };
