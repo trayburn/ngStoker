@@ -1,8 +1,15 @@
 angular.module("StokerAngularApp", ["ngRadialGauge"])
   .controller("MyCtrl", function ($scope, $http, $interval) {
+    var config = {
+      minTemp: 0,
+      maxTemp: 300,
+      interval: 2000,
+      blowerAlertPercentage: 80
+    }
+
     var defaultScale = {
-      min: 0,
-      max: 300,
+      min: config.minTemp,
+      max: config.maxTemp,
       unit: "°",
       precision: 2,
       ranges: [
@@ -42,21 +49,27 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
             s.low = sensor.tl;
             s.blower = sensor.blower;
 
-            s.meterPercent = Math.ceil((s.current / defaultScale.max) * 100);
-            s.meterStyle = {
-              width: s.meterPercent + "%"
-            };
-
-            if (s.current < s.low) { s.meterClass = "secondary"; }
-            if (s.current > s.high) { s.meterClass = "alert"; }
-            if (s.current >= s.low && s.current <= s.high) { s.meterClass = "success"; }
-
             function hasRangesChanged() {
-              if (s.blower === null) { return s.scale.ranges[0].max != (s.target - 10); }
+              if (s.alarm == 0) {
+                return s.scale.ranges[1].min != config.minTemp ||
+                       s.scale.ranges[1].max != config.maxTemp;
+              }
+
+              if (s.blower === null) {
+                return s.scale.ranges[0].max != (s.target - 10);
+              }
+
               return s.low != s.scale.ranges[0].max || s.high != s.scale.ranges[1].max;
             }
 
             function updateRanges() {
+              if (s.alarm == 0) {
+                return [
+                  { min: defaultScale.min, max: defaultScale.min, color: "#0000FF" },
+                  { min: defaultScale.min, max: defaultScale.max, color: "#00FF00" },
+                  { min: defaultScale.max, max: defaultScale.max, color: "#FF0000" },
+                ];
+              }
               if (s.blower === null) {
                 return [
                   { min: defaultScale.min, max: s.target - 10, color: "#0000FF" },
@@ -78,10 +91,18 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
 
           });
 
+          function newHistoryArray() {
+            var retVal = [];
+            for (var i = 0; i < 100; i++) {
+              retVal.push(0);
+            }
+            return retVal;
+          }
+
           data.stoker.blowers.forEach(function (blower) {
             if (typeof $scope.stoker.blowers[blower.id] == 'undefined') {
               // There is a new blower...
-              $scope.stoker.blowers[blower.id] = {};
+              $scope.stoker.blowers[blower.id] = { history: newHistoryArray() };
             }
 
             // Update Blower information
@@ -89,10 +110,26 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
             b.id = blower.id;
             b.name = blower.name;
             b.on = blower.on;
+            b.history.shift();
+            b.history.push(blower.on);
+            b.runPercentage = b.history.reduce(function(a, b) {
+              return a + b;
+            });
+
+            b.meterStyle = {
+              width: b.runPercentage + "%"
+            };
+
+            if (b.runPercentage >= config.blowerAlertPercentage) {
+              b.meterClass = "alert";
+            }
+            else {
+              b.meterClass = "success";
+            }
           });
         });
     }
 
 
-    $interval(updateFromStoker, 1000);
+    $interval(updateFromStoker, config.interval);
   });

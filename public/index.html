@@ -16,8 +16,8 @@
         <span ng-bind="stoker.version"></span>)</h1>
 
       <ul class="tabs" data-tab>
-        <li class="tab-title"><a href="#panel1">Graph</a></li>
         <li class="tab-title active"><a href="#panel2">Guages</a></li>
+        <li class="tab-title"><a href="#panel1">Graph</a></li>
         <li class="tab-title"><a href="#panel3">Settings</a></li>
       </ul>
       <div class="tabs-content">
@@ -25,6 +25,28 @@
           <h2>Graph</h2>
         </div>
         <div class="content active" id="panel2">
+
+          <h2>Blowers</h2>
+          <div ng-repeat="blower in stoker.blowers">
+            <div class="row">
+              <div class="small-1 column switch round">
+                <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
+                <label for="blower"></label>
+              </div>
+              <div class="small-2 column">
+                <span ng-bind="blower.name"></span>
+              </div>
+              <div class="small-1 column">
+                <span ng-bind="blower.runPercentage"></span>%
+              </div>
+              <div class="small-8 column">
+                <div class="progress round small-12 columns text-center" ng-class="blower.meterClass">
+                  <span class="meter" ng-style="blower.meterStyle"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <h2>Sensors</h2>
           <div id="gauge-container" class="row">
             <div ng-repeat="sensor in stoker.sensors" class="small-4 columns">
@@ -36,20 +58,7 @@
                   ranges = "sensor.scale.ranges"
                   value-unit="sensor.scale.unit" precision="sensor.scale.precision"
                   lower-limit="sensor.scale.min" upper-limit="sensor.scale.max"></div>
-                <div class="progress round small-12 columns text-center" ng-class="sensor.meterClass">
-                  <span class="meter" ng-style="sensor.meterStyle"></span>
-                </div>
               </div>
-            </div>
-          </div>
-
-          <h2>Blowers</h2>
-          <div ng-repeat="blower in stoker.blowers">
-            <div ng-bind="blower.id"></div>
-            <div ng-bind="blower.name"></div>
-            <div class="switch round large">
-              <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
-              <label for="blower"></label>
             </div>
           </div>
         </div>
