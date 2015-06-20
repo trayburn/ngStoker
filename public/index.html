@@ -9,65 +9,47 @@
 </head>
 
 <body>
-  <div id="example" ng-app="StokerAngularApp" class="row">
+  <div id="example" ng-app="StokerAngularApp">
     <div ng-controller="MyCtrl">
 
-      <h1>Stoker Dashboard (v
-        <span ng-bind="stoker.version"></span>)</h1>
-
-      <ul class="tabs" data-tab>
-        <li class="tab-title active"><a href="#panel2">Guages</a></li>
-        <li class="tab-title"><a href="#panel1">Graph</a></li>
-        <li class="tab-title"><a href="#panel3">Settings</a></li>
-      </ul>
-      <div class="tabs-content">
-        <div class="content" id="panel1">
-          <h2>Graph</h2>
-        </div>
-        <div class="content active" id="panel2">
-
-          <h2>Blowers</h2>
-          <div ng-repeat="blower in stoker.blowers">
-            <div class="row">
-              <div class="small-4 medium-1 column switch round">
-                <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
-                <label for="blower"></label>
-              </div>
-              <div class="small-4 medium-2 column">
-                <span ng-bind="blower.name"></span>
-              </div>
-              <div class="small-4 medium-1 column">
-                <span ng-bind="blower.runPercentage"></span>%
-              </div>
-              <div class="small-12 medium-8 column">
-                <div class="progress round small-12 columns text-center" ng-class="blower.meterClass">
-                  <span class="meter" ng-style="blower.meterStyle"></span>
-                </div>
-              </div>
+      <div ng-repeat="blower in stoker.blowers">
+        <div class="row">
+          <div class="small-4 medium-1 column switch round right">
+            <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
+            <label for="blower"></label>
+          </div>
+          <div class="small-4 medium-2 column">
+            <span ng-bind="blower.name"></span>
+          </div>
+          <div class="small-4 medium-1 column">
+            <span ng-bind="blower.runPercentage"></span>%
+          </div>
+          <div class="small-12 medium-8 column">
+            <div class="progress small-12 columns text-center" ng-class="blower.meterClass">
+              <span class="meter" ng-style="blower.meterStyle"></span>
             </div>
           </div>
-
-          <h2>Sensors</h2>
-          <div id="gauge-container" class="row">
-            <div ng-repeat="sensor in stoker.sensors" class="small-12 medium-4 columns">
-              <div class="row">
-                <h3 ng-bind="sensor.name" class="small-12 columns text-center"></h3>
-
-                <div
-                  width="250" ng-radial-gauge value="sensor.current"
-                  ranges = "sensor.scale.ranges"
-                  value-unit="sensor.scale.unit" precision="sensor.scale.precision"
-                  lower-limit="sensor.scale.min" upper-limit="sensor.scale.max"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="content" id="panel3">
-          <h1>Hello World</h1>
         </div>
       </div>
 
+      <div id="gauge-container">
+        <div ng-repeat="sensor in stoker.sensors" class="small-12 medium-4 columns">
+          <div class="row">
+            <h4 class="small-12 columns text-center">
+              <span ng-bind="sensor.name"></span> -
+              <span ng-bind="sensor.current"></span>
+            </h4>
 
+            <div
+              width="250" ng-radial-gauge value="sensor.current"
+              ranges = "sensor.scale.ranges"
+              value-unit="sensor.scale.unit" precision="sensor.scale.precision"
+              lower-limit="sensor.scale.min" upper-limit="sensor.scale.max"></div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center">Stoker Dashboard (v
+        <span ng-bind="stoker.version"></span>)</p>
     </div>
 
 
@@ -75,7 +57,6 @@
     <script src="vendor/jquery/dist/jquery.min.js"></script>
     <script src="vendor/fastclick/lib/fastclick.js"></script>
     <script src="vendor/foundation/js/foundation.min.js"></script>
-    <!--<script src="vendor/foundation/js/foundation/foundation.tab.js"></script>-->
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/ngRadialGauge/src/ng-radial-gauge-dir.js"></script>
 
