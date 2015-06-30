@@ -9,8 +9,15 @@ function randomBool() {
   return Math.round(random(0,1));
 }
 
+/* Don't break my bookmarks which used this old address */
+app.get('/public', function (req, res) {
+  res.redirect('/');
+});
+
+/* Serve up static content from the public folder */
 app.use(express.static('public'));
 
+/* respond to calls to stoker.json with JSONP response */
 app.get('/stoker.json', function (req, res) {
   var data = {
     stoker: {
@@ -65,11 +72,12 @@ app.get('/stoker.json', function (req, res) {
   res.jsonp(data);
 });
 
+// ************************************************************************
+// Express Server
+// ************************************************************************
+
 var port = process.env.port || 4000;
-
 var server = app.listen(port, function () {
-
   var host = server.address().address;
   console.log('Example app listening at http://%s:%s', host, port);
-
 });
