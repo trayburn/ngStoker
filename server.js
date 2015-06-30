@@ -44,13 +44,18 @@ app.get('/stoker.json', function (req, res) {
           ta: 250,
           th: 275,
           tl: 235,
-          blower: "blower1"
+          blower: "blower2"
         }
       ],
       blowers: [
         {
           id: "blower1",
           name: "Klose",
+          on: randomBool()
+        },
+        {
+          id: "blower2",
+          name: "Weber",
           on: randomBool()
         }
       ]

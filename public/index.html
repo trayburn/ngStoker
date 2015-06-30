@@ -14,18 +14,18 @@
 
       <div ng-repeat="blower in stoker.blowers">
         <div class="row">
-          <div class="small-4 medium-1 column switch round right">
+          <div class="small-4 medium-1 column switch round right tiny">
             <input id="blower" type="radio" name="testGroup" ng-checked="blower.on" disabled>
             <label for="blower"></label>
           </div>
-          <div class="small-4 medium-2 column">
+          <div class="equipment-name small-4 medium-2 column">
             <span ng-bind="blower.name"></span>
           </div>
           <div class="small-4 medium-1 column">
             <span ng-bind="blower.runPercentage"></span>%
           </div>
           <div class="small-12 medium-8 column">
-            <div class="progress small-12 columns text-center" ng-class="blower.meterClass">
+            <div class="progress small-12 columns text-center tiny" ng-class="blower.meterClass">
               <span class="meter" ng-style="blower.meterStyle"></span>
             </div>
           </div>
@@ -35,7 +35,7 @@
       <div class="row" id="gauge-container">
         <div ng-repeat="airSensor in stoker.airSensors" class="small-6 medium-4 columns">
           <span class="small-12 columns text-center">
-            <span ng-bind="airSensor.name"></span>
+            <span class="equipment-name" ng-bind="airSensor.name"></span>
             <br />
             <span ng-bind="airSensor.current"></span>
           </span>
@@ -53,10 +53,12 @@
         </div>
       </div>
 
+      <hr />
+
       <div class="row" id="gauge-container">
         <div ng-repeat="sensor in stoker.foodSensors" class="small-6 medium-4 columns">
           <span class="small-12 columns text-center">
-            <span ng-bind="sensor.name"></span>
+            <span class="equipment-name" ng-bind="sensor.name"></span>
             <br />
             <span ng-bind="sensor.current"></span>
           </span>
@@ -78,7 +80,7 @@
         <div class="small-12 columns">
           <p class="text-center">
             Stoker Dashboard (v<span ng-bind="stoker.version"></span>) <br/>
-            <a ng-click="testMode()" class="text-center">Test Mode</a>
+            <a ng-click="configureMode()">Set Stoker Address</a> | <a ng-click="testMode()">Test Mode</a> | <a ng-click="localTestMode()">Local Test Mode</a>
           </p>
         </div>
       </div>

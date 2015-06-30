@@ -5,7 +5,7 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       maxTemp: 300,
       interval: 2000,
       blowerAlertPercentage: 80,
-      stokerIp: "rayburn.myds.me",
+      stokerIp: "stoker.azurewebsites.net",
       intervalPromise: null
     }
 
@@ -29,12 +29,28 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       blowers: {}
     };
 
+    $scope.configureMode = function() {
+      config.stokerIp = window.prompt("What is the IP address of your Stoker?", "rayburn.myds.me");
+      config.interval = 250;
+      $interval.cancel(config.intervalPromise);
+      config.intervalPromise = $interval(updateFromStoker, config.interval);
+    }
+
+
     $scope.testMode = function() {
       config.stokerIp = "stoker.azurewebsites.net";
       config.interval = 500;
       $interval.cancel(config.intervalPromise);
       config.intervalPromise = $interval(updateFromStoker, config.interval);
     }
+
+    $scope.localTestMode = function() {
+      config.stokerIp = "127.0.0.1:4000";
+      config.interval = 250;
+      $interval.cancel(config.intervalPromise);
+      config.intervalPromise = $interval(updateFromStoker, config.interval);
+    }
+
 
     function updateFromStoker() {
       $http.jsonp("http://" + config.stokerIp + "/stoker.json?version=true&callback=JSON_CALLBACK")

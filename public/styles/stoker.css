@@ -3,3 +3,25 @@
   margin-left:auto;
   margin-right:auto;
 }
+
+body {
+  margin-top: 5px;
+}
+
+.switch {
+  margin-bottom: 0px;
+}
+
+.progress {
+  padding: 0px;
+  height: 5px;
+}
+
+.equipment-name {
+  font-weight: bold;
+}
+
+hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
