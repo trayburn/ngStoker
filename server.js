@@ -1,13 +1,64 @@
+var uuid = require('node-uuid');
 var express = require('express');
 var app = express();
+var idCache = {};
 
+// ************************************************************************
+// Helper Functions
+// ************************************************************************
 function random (low, high) {
     return Math.random() * (high - low) + low;
 }
 
-function randomBool() {
-  return Math.round(random(0,1));
+function randomBool(percent) {
+  var val = Math.round(random(1,100));
+
+  if (val > percent) { return 0; }
+  else { return 1; }
 }
+
+function newBlower(name, percent) {
+  if (typeof idCache[name] == 'undefined') { idCache[name] = uuid.v4(); }
+
+  return {
+    id: idCache[name],
+    name: name,
+    on: randomBool(percent)
+  }
+}
+function newAirSensor(name, blower) {
+  if (typeof idCache[name] == 'undefined') { idCache[name] = uuid.v4(); }
+
+  return {
+    id: idCache[name],
+    name: name,
+    tc: Math.round(random(245,265) * 100) / 100,
+    al: 1,
+    ta: 250,
+    th: 275,
+    tl: 235,
+    blower: blower
+  };
+}
+
+function newFoodSensor(name) {
+  if (typeof idCache[name] == 'undefined') { idCache[name] = uuid.v4(); }
+
+  return {
+    id: idCache[name],
+    name: name,
+    tc: Math.round(random(185,195) * 100) / 100,
+    al: 1,
+    ta: 190,
+    th: 200,
+    tl: 180,
+    blower: null
+  };
+}
+// ************************************************************************
+// Routes
+// ************************************************************************
+
 
 /* Don't break my bookmarks which used this old address */
 app.get('/public', function (req, res) {
@@ -23,48 +74,15 @@ app.get('/stoker.json', function (req, res) {
     stoker: {
       version: "9.9.9.9",
       sensors: [
-        {
-          id: "sensor1",
-          name: "Brisket",
-          tc: Math.round(random(90,100) * 100) / 100,
-          al: 1,
-          ta: 95,
-          th: 100,
-          tl: 90,
-          blower: null
-        },
-        {
-          id: "sensor2",
-          name: "Klose Air",
-          tc: Math.round(random(235,275) * 100) / 100,
-          al: 1,
-          ta: 250,
-          th: 275,
-          tl: 235,
-          blower: "blower1"
-        },
-        {
-          id: "sensor3",
-          name: "Weber Air",
-          tc: Math.round(random(235,275) * 100) / 100,
-          al: 1,
-          ta: 250,
-          th: 275,
-          tl: 235,
-          blower: "blower2"
-        }
+        newFoodSensor("Brisket"),
+        newFoodSensor("Pulled Pork"),
+        newFoodSensor("Chicken"),
+        newAirSensor("Klose Air", "blower1"),
+        newAirSensor("Weber 18 Air", "blower2")
       ],
       blowers: [
-        {
-          id: "blower1",
-          name: "Klose",
-          on: randomBool()
-        },
-        {
-          id: "blower2",
-          name: "Weber",
-          on: randomBool()
-        }
+        newBlower("Klose", 65),
+        newBlower("Weber 18", 80)
       ]
     }
   };

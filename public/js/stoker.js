@@ -29,6 +29,8 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       blowers: {}
     };
 
+    $scope.dials = true;
+
     $scope.configureMode = function() {
       config.stokerIp = window.prompt("What is the IP address of your Stoker?", "rayburn.myds.me");
       config.interval = 250;
@@ -49,6 +51,10 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       config.interval = 250;
       $interval.cancel(config.intervalPromise);
       config.intervalPromise = $interval(updateFromStoker, config.interval);
+    }
+
+    $scope.toggleDials = function() {
+      $scope.dials = !$scope.dials;
     }
 
 

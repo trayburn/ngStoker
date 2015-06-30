@@ -5,6 +5,8 @@
   <title></title>
   <link rel="stylesheet" href="vendor/foundation/css/foundation.min.css" />
   <link rel="stylesheet" href="styles/stoker.css" />
+
+  <script> if (navigator.userAgent.match(/IEMobile\/10\.0/)) { var msViewportStyle = document.createElement("style"); msViewportStyle.appendChild( document.createTextNode( "@-ms-viewport{width:auto!important}" ) ); document.getElementsByTagName("head")[0]. appendChild(msViewportStyle); } </script>
   <script src="vendor/modernizr/modernizr.js"></script>
 </head>
 
@@ -43,6 +45,7 @@
           <div class="small-12 columns">
             <div
               width="150"
+              ng-show="dials"
               ng-radial-gauge value="airSensor.current"
               ranges = "airSensor.scale.ranges"
               value-unit="airSensor.scale.unit"
@@ -66,6 +69,7 @@
           <div class="small-12 columns">
             <div
               width="150"
+              ng-show="dials"
               ng-radial-gauge value="sensor.current"
               ranges = "sensor.scale.ranges"
               value-unit="sensor.scale.unit"
@@ -80,7 +84,8 @@
         <div class="small-12 columns">
           <p class="text-center">
             Stoker Dashboard (v<span ng-bind="stoker.version"></span>) <br/>
-            <a ng-click="configureMode()">Set Stoker Address</a> | <a ng-click="testMode()">Test Mode</a> | <a ng-click="localTestMode()">Local Test Mode</a>
+            <a ng-click="configureMode()">Set Stoker Address</a> | <a ng-click="testMode()">Test Mode</a> | <a ng-click="localTestMode()">Local Test Mode</a><br />
+            <a ng-click="toggleDials()">Toggle Dials</a>
           </p>
         </div>
       </div>
