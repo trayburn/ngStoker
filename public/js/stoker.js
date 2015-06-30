@@ -59,7 +59,7 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
 
 
     function updateFromStoker() {
-      $http.jsonp("http://" + config.stokerIp + "/stoker.json?version=true&callback=JSON_CALLBACK")
+      $http.jsonp("http://" + config.stokerIp + "/stoker.json?version=true&callback=JSON_CALLBACK&nocache=" + new Date().getTime())
         .success(function (data) {
           $scope.stoker.version = data.stoker.version;
           var chartDataPoint = { };
