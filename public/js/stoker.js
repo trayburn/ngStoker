@@ -6,6 +6,11 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       interval: 2000,
       blowerAlertPercentage: 80,
       stokerIp: "stoker.azurewebsites.net",
+      colors: {
+        blue: "#DDDDFF",
+        green: "#66FF66",
+        red: "#FF0000"
+      },
       intervalPromise: null
     }
 
@@ -15,19 +20,23 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       unit: "°",
       precision: 2,
       ranges: [
-        { min: 0, max: 0, color: "#0000FF" },
-        { min: 0, max: 500, color: "#00FF00" },
-        { min: 500, max: 500, color: "#FF0000" }
+        { min: 0, max: 0, color: config.colors.blue },
+        { min: 0, max: 500, color: config.colors.green },
+        { min: 500, max: 500, color: config.colors.red }
       ]
     };
 
-    $scope.stoker = {
-      version: "0.0.0.0",
-      sensors: {},
-      foodSensors: {},
-      airSensors: {},
-      blowers: {}
-    };
+    function newStoker(version) {
+      return {
+        version: version || "TEST MODE",
+        sensors: {},
+        foodSensors: {},
+        airSensors: {},
+        blowers: {}
+      };
+    }
+
+    $scope.stoker = newStoker();
 
     $scope.dials = true;
 
@@ -36,6 +45,7 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       config.interval = 250;
       $interval.cancel(config.intervalPromise);
       config.intervalPromise = $interval(updateFromStoker, config.interval);
+      $scope.stoker = newStoker();
     }
 
 
@@ -44,6 +54,7 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       config.interval = 500;
       $interval.cancel(config.intervalPromise);
       config.intervalPromise = $interval(updateFromStoker, config.interval);
+      $scope.stoker = newStoker();
     }
 
     $scope.localTestMode = function() {
@@ -51,6 +62,7 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       config.interval = 250;
       $interval.cancel(config.intervalPromise);
       config.intervalPromise = $interval(updateFromStoker, config.interval);
+      $scope.stoker = newStoker();
     }
 
     $scope.toggleDials = function() {
@@ -105,22 +117,22 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
             function updateRanges() {
               if (s.alarm == 0) {
                 return [
-                  { min: defaultScale.min, max: defaultScale.min, color: "#0000FF" },
-                  { min: defaultScale.min, max: defaultScale.max, color: "#00FF00" },
-                  { min: defaultScale.max, max: defaultScale.max, color: "#FF0000" },
+                  { min: defaultScale.min, max: defaultScale.min, color: config.colors.blue },
+                  { min: defaultScale.min, max: defaultScale.max, color: config.colors.green },
+                  { min: defaultScale.max, max: defaultScale.max, color: config.colors.red },
                 ];
               }
               if (s.blower === null) {
                 return [
-                  { min: defaultScale.min, max: s.target - 10, color: "#0000FF" },
-                  { min: s.target - 10, max: s.target + 10, color: "#00FF00" },
-                  { min: s.target + 10, max: defaultScale.max, color: "#FF0000" }
+                  { min: defaultScale.min, max: s.target - 10, color: config.colors.blue },
+                  { min: s.target - 10, max: s.target + 10, color: config.colors.green },
+                  { min: s.target + 10, max: defaultScale.max, color: config.colors.red }
                 ];
               }
               return [
-                { min: defaultScale.min, max: s.low, color: "#0000FF" },
-                { min: s.low, max: s.high, color: "#00FF00" },
-                { min: s.high, max: defaultScale.max, color: "#FF0000" }
+                { min: defaultScale.min, max: s.low, color: config.colors.blue },
+                { min: s.low, max: s.high, color: config.colors.green },
+                { min: s.high, max: defaultScale.max, color: config.colors.red }
               ];
             }
 

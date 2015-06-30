@@ -72,7 +72,7 @@ app.use(express.static('public'));
 app.get('/stoker.json', function (req, res) {
   var data = {
     stoker: {
-      version: "9.9.9.9",
+      version: "TEST MODE",
       sensors: [
         newFoodSensor("Brisket"),
         newFoodSensor("Pulled Pork"),
