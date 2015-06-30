@@ -75,7 +75,8 @@ app.get('/stoker.json', function (req, res) {
       version: "TEST MODE",
       sensors: [
         newFoodSensor("Brisket"),
-        newFoodSensor("Pulled Pork"),
+        newFoodSensor("Pork Butt 1"),
+        newFoodSensor("Pork Butt 2"),
         newFoodSensor("Chicken"),
         newAirSensor("Klose Air", "blower1"),
         newAirSensor("Weber 18 Air", "blower2")
