@@ -30,8 +30,8 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
     };
 
     $scope.testMode = function() {
-      config.stokerIp = "127.0.0.1:3000";
-      config.interval = 200;
+      config.stokerIp = "stoker.azurewebsites.net";
+      config.interval = 500;
       $interval.cancel(config.intervalPromise);
       config.intervalPromise = $interval(updateFromStoker, config.interval);
     }
