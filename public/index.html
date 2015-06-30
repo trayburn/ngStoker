@@ -32,24 +32,56 @@
         </div>
       </div>
 
-      <div id="gauge-container">
-        <div ng-repeat="sensor in stoker.sensors" class="small-12 medium-4 columns">
-          <div class="row">
-            <h4 class="small-12 columns text-center">
-              <span ng-bind="sensor.name"></span> -
-              <span ng-bind="sensor.current"></span>
-            </h4>
+      <div class="row" id="gauge-container">
+        <div ng-repeat="airSensor in stoker.airSensors" class="small-6 medium-4 columns">
+          <span class="small-12 columns text-center">
+            <span ng-bind="airSensor.name"></span>
+            <br />
+            <span ng-bind="airSensor.current"></span>
+          </span>
 
+          <div class="small-12 columns">
             <div
-              width="250" ng-radial-gauge value="sensor.current"
-              ranges = "sensor.scale.ranges"
-              value-unit="sensor.scale.unit" precision="sensor.scale.precision"
-              lower-limit="sensor.scale.min" upper-limit="sensor.scale.max"></div>
+              width="150"
+              ng-radial-gauge value="airSensor.current"
+              ranges = "airSensor.scale.ranges"
+              value-unit="airSensor.scale.unit"
+              precision="airSensor.scale.precision"
+              lower-limit="airSensor.scale.min"
+              upper-limit="airSensor.scale.max"></div>
           </div>
         </div>
       </div>
-      <p class="text-center">Stoker Dashboard (v
-        <span ng-bind="stoker.version"></span>)</p>
+
+      <div class="row" id="gauge-container">
+        <div ng-repeat="sensor in stoker.foodSensors" class="small-6 medium-4 columns">
+          <span class="small-12 columns text-center">
+            <span ng-bind="sensor.name"></span>
+            <br />
+            <span ng-bind="sensor.current"></span>
+          </span>
+
+          <div class="small-12 columns">
+            <div
+              width="150"
+              ng-radial-gauge value="sensor.current"
+              ranges = "sensor.scale.ranges"
+              value-unit="sensor.scale.unit"
+              precision="sensor.scale.precision"
+              lower-limit="sensor.scale.min"
+              upper-limit="sensor.scale.max"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="small-12 columns">
+          <p class="text-center">
+            Stoker Dashboard (v<span ng-bind="stoker.version"></span>) <br/>
+            <a ng-click="testMode()" class="text-center">Test Mode</a>
+          </p>
+        </div>
+      </div>
     </div>
 
 

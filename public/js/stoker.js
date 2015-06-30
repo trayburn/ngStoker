@@ -5,7 +5,8 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
       maxTemp: 300,
       interval: 2000,
       blowerAlertPercentage: 80,
-      stokerIp: "rayburn.myds.me"
+      stokerIp: "rayburn.myds.me",
+      intervalPromise: null
     }
 
     var defaultScale = {
@@ -23,8 +24,17 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
     $scope.stoker = {
       version: "0.0.0.0",
       sensors: {},
+      foodSensors: {},
+      airSensors: {},
       blowers: {}
     };
+
+    $scope.testMode = function() {
+      config.stokerIp = "127.0.0.1:3000";
+      config.interval = 200;
+      $interval.cancel(config.intervalPromise);
+      config.intervalPromise = $interval(updateFromStoker, config.interval);
+    }
 
     function updateFromStoker() {
       $http.jsonp("http://" + config.stokerIp + "/stoker.json?version=true&callback=JSON_CALLBACK")
@@ -49,6 +59,13 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
             s.high = sensor.th;
             s.low = sensor.tl;
             s.blower = sensor.blower;
+
+            if (s.blower === null && typeof $scope.stoker.foodSensors[sensor.id] == 'undefined') {
+              $scope.stoker.foodSensors[sensor.id] = s;
+            }
+            if (s.blower != null && typeof $scope.stoker.airSensors[sensor.id] == 'undefined') {
+              $scope.stoker.airSensors[sensor.id] = s;
+            }
 
             function hasRangesChanged() {
               if (s.alarm == 0) {
@@ -132,5 +149,5 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
     }
 
 
-    $interval(updateFromStoker, config.interval);
+    config.intervalPromise = $interval(updateFromStoker, config.interval);
   });
