@@ -8,11 +8,16 @@ function newStoker(version) {
   };
 }
 
-function resetLocalData(ip, interval) {
+function resetLocalData(ip, interval, $interval, $scope, $http) {
   config.stokerIp = ip;
   config.interval = interval;
   $interval.cancel(config.intervalPromise);
-  config.intervalPromise = $interval(updateFromStoker, config.interval);
+
+  function update() {
+    return updateFromStoker($http, $scope);
+  }
+
+  config.intervalPromise = $interval(update, config.interval);
   $scope.stoker = newStoker();
 }
 
