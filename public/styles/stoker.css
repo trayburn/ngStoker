@@ -4,7 +4,7 @@
   margin-right:auto;
 }
 
-body {
+#blowers {
   margin-top: 5px;
 }
 
@@ -19,6 +19,11 @@ body {
 
 .equipment-name {
   font-weight: bold;
+}
+
+.alert-box {
+  margin: 0px;
+  padding: 5px;
 }
 
 hr {

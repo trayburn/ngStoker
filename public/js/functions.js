@@ -4,7 +4,9 @@ function newStoker(version) {
     sensors: {},
     foodSensors: {},
     airSensors: {},
-    blowers: {}
+    blowers: {},
+    alertBlowers: [],
+    alertFood: []
   };
 }
 
@@ -88,6 +90,14 @@ function updateFromStoker($http, $scope) {
         s.low = sensor.tl;
         s.blower = sensor.blower;
 
+        if (s.blower === null) {
+          if (s.current >= s.target) {
+            $scope.stoker.alertFood.push(s);
+          } else {
+            $scope.stoker.alertFood.pop(s);
+          }
+        }
+
         if (s.blower === null && typeof $scope.stoker.foodSensors[sensor.id] == 'undefined') {
           $scope.stoker.foodSensors[sensor.id] = s;
         }
@@ -124,9 +134,11 @@ function updateFromStoker($http, $scope) {
 
         if (b.runPercentage >= config.blowerAlertPercentage) {
           b.meterClass = "alert";
+          $scope.stoker.alertBlowers.push(b);
         }
         else {
           b.meterClass = "success";
+          $scope.stoker.alertBlowers.pop(b);
         }
       });
     });
