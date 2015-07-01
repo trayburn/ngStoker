@@ -4,7 +4,10 @@ angular.module("StokerAngularApp", ["ngRadialGauge"])
     $scope.dials = true;
 
     $scope.configureMode = function() {
-      return resetLocalData(window.prompt("What is the IP address of your Stoker?", "rayburn.myds.me"), 2000, $interval, $scope, $http);
+      return resetLocalData(window.prompt("What is the IP address of your Stoker?", ""), 2000, $interval, $scope, $http);
+    }
+    $scope.localMode = function() {
+      return resetLocalData("rayburn.myds.me", 2000, $interval, $scope, $http);
     }
     $scope.testMode = function() {
       return resetLocalData("stoker.azurewebsites.net", 500, $interval, $scope, $http);
