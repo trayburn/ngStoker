@@ -5,8 +5,8 @@ var config = {
   blowerAlertPercentage: 80,
   stokerIp: "stoker.azurewebsites.net",
   colors: {
-    blue: "#8888FF",
-    green: "#66FF66",
+    blue: "#0000FF",
+    green: "#00FF00",
     red: "#FF0000"
   },
   intervalPromise: null
