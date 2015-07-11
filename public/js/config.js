@@ -1,6 +1,6 @@
 var config = {
   minTemp: 0,
-  maxTemp: 300,
+  maxTemp: 450,
   interval: 2000,
   blowerAlertPercentage: 80,
   stokerIp: "stoker.azurewebsites.net",
