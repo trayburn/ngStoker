@@ -3,7 +3,7 @@ var config = {
   maxTemp: 450,
   interval: 2000,
   blowerAlertPercentage: 80,
-  stokerIp: "stoker.azurewebsites.net",
+  stokerIp: getRequestedStokerIp() || "stoker.azurewebsites.net",
   colors: {
     blue: "#0000FF",
     green: "#00FF00",
@@ -23,3 +23,16 @@ var defaultScale = {
     { min: 500, max: 500, color: config.colors.red }
   ]
 };
+
+function getRequestedStokerIp() {
+  var hash = window.location.hash;
+  if (hash) {
+    switch(hash.toLowerCase()) {
+      case "#rayburn":
+        return "rayburn.myds.me"
+      default:
+        return null;
+    }
+  }
+  return null;
+}
